@@ -32,8 +32,6 @@
     homeManagerConfig = with self.homeManagerModules; {
       imports = [
         ./home
-        # config.git.aliases
-        # config.gh.aliases
       ];
     };
 
@@ -61,6 +59,10 @@
               "8.8.8.8"
               "1.1.1.1"
             ];
+            networking.knownNetworkServices = [
+              "Wi-Fi"
+              "USB 10/100/1000 LAN"
+            ];
           }
         ];
       };
@@ -74,6 +76,10 @@
             networking.dns = [
               "8.8.8.8"
               "1.1.1.1"
+            ];
+            networking.knownNetworkServices = [
+              "Wi-Fi"
+              "USB 10/100/1000 LAN"
             ];
           }
         ];
@@ -89,13 +95,12 @@
       programs.fish = import ./darwin/modules/programs/fish.nix;
     };
 
-    homeManagerModules = {
-      # configs.git.aliases = import ./home/configs/git-aliases.nix;
-      # configs.gh.aliases = import ./home/configs/gh-aliases.nix;
-    };
+    homeManagerModules = { };
 
     overlays = with inputs; [
-      (final: prev: { })
+      (final: prev: {
+        comma = import comma { inherit (prev) pkgs; };
+      })
       (import ./overlays)
     ];
 

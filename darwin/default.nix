@@ -35,6 +35,7 @@
     ssm
     yabai
     skhd
+    comma
   ];
 
   users.users.jcosta = {
@@ -115,11 +116,11 @@
   # $ sysctl -n hw.ncpu
   nix.maxJobs = 12;
   nix.buildCores = 0;
-  nix.nixPath = pkgs.lib.mkForce [{
-    darwin-config = builtins.concatStringsSep ":" [
-      "$HOME/.nixpkgs/darwin-configuration.nix"
-      "$HOME/.nix-defexpr/channels"
-    ];
-  }];
+  # nix.nixPath = pkgs.lib.mkForce [{
+  #   darwin-config = builtins.concatStringsSep ":" [
+  #     "$HOME/.nixpkgs/darwin-configuration.nix"
+  #     "$HOME/.nix-defexpr/channels"
+  #   ];
+  # }];
 }
 

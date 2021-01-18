@@ -18,6 +18,7 @@
     fzy
     skim     
     ffmpeg
+    folderify
 
     sqlite
     nodejs_latest
@@ -199,7 +200,7 @@
     '';
 
     plugins = with pkgs.kakounePlugins; [
-      # TODO
+      # TODO: wth happened? (undefined var 'lib')
       # kak-prelude
       # case-kak
       # kak-auto-pairs
@@ -212,7 +213,7 @@
   programs.bat.enable = true;
 
   programs.neovim = {
-    enable = false;
+    enable = true;
     vimAlias = true;
     extraConfig = ''
     colorscheme gruvbox

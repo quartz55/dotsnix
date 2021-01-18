@@ -6,5 +6,5 @@ let
   inherit (super.stdenv) isDarwin;
 in
 optionalAttrs isDarwin {
-  folderify = callPackage ./folderify.nix;
+  folderify = callPackage ./folderify.nix { };
 }
