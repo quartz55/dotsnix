@@ -19,6 +19,7 @@
     # others
     comma = { url = "github:Shopify/comma"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
+    malob.url = "github:malob/nixpkgs";
   };
 
 
@@ -37,6 +38,7 @@
 
     mkNixDarwinModules = { user }: [
       self.darwinModules.programs.fish
+      inputs.malob.darwinModules.security.pam
       ./darwin
       home-manager.darwinModules.home-manager
       {
@@ -45,6 +47,7 @@
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.users.${user} = homeManagerConfig;
+        security.pam.enableSudoTouchIdAuth = true;
       }
     ];
   in {
