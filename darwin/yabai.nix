@@ -63,9 +63,7 @@
       fn + alt - x : yabai -m window --focus stack.next
 
       fn + alt - s : yabai -m space --layout stack
-      cmd + ctrl + shift - s : yabai -m space --layout stack
       fn + alt - a : yabai -m space --layout bsp
-      cmd + ctrl + shift - a : yabai -m space --layout bsp
 
       fn + alt - d : yabai -m window --toggle zoom-parent
       fn + alt - f : yabai -m window --toggle zoom-fullscreen

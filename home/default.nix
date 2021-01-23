@@ -4,28 +4,37 @@
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    # nix
+    cachix
+    nixpkgs-fmt
+    rnix-lsp
+
+    # terminal/shell goodies
     direnv
     ranger
     tig
     lazygit
     thefuck
-    bitwarden-cli
-
     ripgrep # grep replacement (in rust)
     exa # ls replacement (in rust)
     fd # find replacement (in rust)
     jq
     fzy
-    skim     
-    ffmpeg
-    folderify
+    skim
 
-    sqlite
+	# compilers/vms/runtimes
+    python2Full
+    python39
     nodejs_latest
     zig-master
 
-    python2Full
-    python39
+    # others
+    ffmpeg
+    sqlite
+    bitwarden-cli
+
+    # os goodies
+    folderify
   ];
 
   home.sessionVariables = {

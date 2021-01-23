@@ -20,6 +20,9 @@
     comma = { url = "github:Shopify/comma"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
     malob.url = "github:malob/nixpkgs";
+    # rnix-lsp.url = "github:nix-community/rnix-lsp";
+    # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
+    # rnix-lsp.inputs.utils.follows = "flake-utils";
   };
 
 
@@ -41,7 +44,7 @@
       inputs.malob.darwinModules.security.pam
       ./darwin
       home-manager.darwinModules.home-manager
-      {
+      rec {
         nixpkgs = nixpkgsConfig;
         users.users.${user}.home = "/Users/${user}";
         home-manager.useGlobalPkgs = true;
@@ -103,6 +106,7 @@
     overlays = with inputs; [
       (final: prev: {
         comma = import comma { inherit (prev) pkgs; };
+        # rnix-lsp = import rnix-lsp { inherit (prev) pkgs; };
       })
       (import ./overlays)
     ];

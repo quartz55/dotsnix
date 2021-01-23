@@ -12,16 +12,13 @@
       lazygit = super.callPackage ./pkgs/lazygit.nix { };
       zig-master = super.callPackage ./pkgs/zig-master.nix { };
       ssm = super.callPackage ./pkgs/ssm.nix { };
-      # yabai = super.yabai.overrideAttrs (o: {
-      #   version = "3.3.6";
-
-      #   src = super.fetchFromGitHub {
-      #     owner = "koekeishiya";
-      #     repo = "yabai";
-      #     rev = "v3.3.6";
-      #     sha256 = "0319k35c2rm0hsf0s5qdx4510g2n3nzg42cw1mhxcqrpi63604gg";
-      #   };
-      # });
+      yabai = super.yabai.overrideAttrs (o: rec {
+        version = "3.3.6";
+        src = builtins.fetchTarball {
+          url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
+          sha256 = "0a4yb1wisxhn7k8f9l4bp8swkb17qdkc4crh42zvz4lpaxg0sgxi";
+        };
+      });
     })
   ];
 
