@@ -18,18 +18,19 @@
 
     # others
     comma = { url = "github:Shopify/comma"; flake = false; };
-    flake-utils.url = "github:numtide/flake-utils";
+    utils.url = "github:numtide/flake-utils";
     malob.url = "github:malob/nixpkgs";
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
     # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
-    # rnix-lsp.inputs.utils.follows = "flake-utils";
+    # rnix-lsp.inputs.utils.follows = "utils";
   };
 
 
-  outputs = { self, nixpkgs, nur, darwin, home-manager, flake-utils, ... }@inputs:
+  outputs = { self, nixpkgs, nur, darwin, home-manager, utils, ... }@inputs:
   let
     nixpkgsConfig = with inputs; {
       config.allowUnfree = true;
+      config.allowUnsupportedSystem = true;
       overlays = self.overlays;
     };
 
@@ -113,7 +114,7 @@
 
     defaultPackage."x86_64-darwin" = self.darwinConfigurations.personalMacPro.system;
 
-  } // flake-utils.lib.eachDefaultSystem (system: {
+  } // utils.lib.eachDefaultSystem (system: {
       legacyPackages = import nixpkgs { inherit system; inherit (nixpkgsConfig) config overlays; };
   });
 }

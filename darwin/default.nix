@@ -55,34 +55,12 @@
 
   programs.nix-index.enable = true;
 
-  services.lorri = {
-    enable = true;
-  };
+  # services.lorri.enable = true;
 
   programs.bash.enable = true;
   programs.zsh.enable = true;
   programs.fish = {
     enable = true;
-    # shellInit = ''
-    #   function __nix_darwin_fish_macos_fix_path -d "reorder path prioritizing darwin-nix paths"
-    #     set -l path $PATH
-    #     set -l SYS_PATHS /usr/local/bin /usr/bin /bin /usr/sbin /sbin
-    #     set -l found
-    #     set -l i 1
-    #     while not test -z $path[$i]
-    #       set -l p $path[$i]
-    #       if contains $p $SYS_PATHS; and not contains $p $fish_user_paths
-    #         set found $found $p
-    #         set -e path[$i]
-    #         continue
-    #       end
-    #       set i (math $i + 1)
-    #     end
-    #     set -g PATH $path $found
-    #   end
-    # '';
-    # interactiveShellInit = "__nix_darwin_fish_macos_fix_path";
-
     # Needed to address bug where $PATH is not properly set for fish:
     # https://github.com/LnL7/nix-darwin/issues/122
     interactiveShellInit = ''
@@ -108,16 +86,12 @@
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
+    keep-outputs = true
+    keep-derivations = true
   '';
   # You should generally set this to the total number of logical cores in your system.
   # $ sysctl -n hw.ncpu
   nix.maxJobs = 12;
   nix.buildCores = 0;
-  # nix.nixPath = pkgs.lib.mkForce [{
-  #   darwin-config = builtins.concatStringsSep ":" [
-  #     "$HOME/.nixpkgs/darwin-configuration.nix"
-  #     "$HOME/.nix-defexpr/channels"
-  #   ];
-  # }];
 }
 
