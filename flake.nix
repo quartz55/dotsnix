@@ -5,6 +5,7 @@
     # nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
+    # nixpkgs-master.url = "git+ssh://git@github.com/nixos/nixpkgs?ref=master";
     nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-20.09-darwin";
     nixos-stable.url = "github:nixos/nixpkgs/nixos-20.09";
     nur.url = "github:nix-community/NUR";
@@ -26,12 +27,21 @@
   };
 
 
-  outputs = { self, nixpkgs, nur, darwin, home-manager, utils, ... }@inputs:
+  outputs = { self, nur, darwin, home-manager, utils, ... }@inputs:
   let
+    nixpkgs = inputs.nixpkgs-master;
     nixpkgsConfig = with inputs; {
       config.allowUnfree = true;
       config.allowUnsupportedSystem = true;
-      overlays = self.overlays;
+      overlays = self.overlays ++ [(final: prev:
+      let
+      	system = prev.stdenv.system;
+      	nixpkgs-stable = if prev.stdenv.isDarwin then nixpkgs-stable-darwin else nixos-stable;
+      in
+      {
+        stable = nixpkgs-stable.legacyPackages.${system};
+        master = nixpkgs-master.legacyPackages.${system};
+      })];
     };
 
     homeManagerConfig = with self.homeManagerModules; {
@@ -41,7 +51,6 @@
     };
 
     mkNixDarwinModules = { user }: [
-      self.darwinModules.programs.fish
       inputs.malob.darwinModules.security.pam
       ./darwin
       home-manager.darwinModules.home-manager
@@ -99,7 +108,6 @@
     };
 
     darwinModules = {
-      programs.fish = import ./darwin/modules/programs/fish.nix;
     };
 
     homeManagerModules = { };
