@@ -1,17 +1,18 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, yabai ? false, ... }:
 
 {
   imports = [
     # ./bootstrap.nix
     ./macos.nix
-    ./yabai.nix
-  ] ++ lib.filter lib.pathExists [ ./private.nix ];
+  ]
+  ++ (if yabai then [ ./yabai.nix ] else [ ])
+  ++ lib.filter lib.pathExists [ ./private.nix ];
 
   nixpkgs.overlays = [
     (self: super: {
-      lazygit = super.callPackage ./pkgs/lazygit.nix { };
-      zig-master = super.callPackage ./pkgs/zig-master.nix { };
-      ssm = super.callPackage ./pkgs/ssm.nix { };
+      # lazygit = super.callPackage ./pkgs/lazygit.nix { };
+      # zig-master = super.callPackage ./pkgs/zig-master.nix { };
+      # ssm = super.callPackage ./pkgs/ssm.nix { };
       yabai = super.yabai.overrideAttrs (o: rec {
         version = "3.3.6";
         src = builtins.fetchTarball {

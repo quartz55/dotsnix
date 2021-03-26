@@ -16,7 +16,7 @@
       gs = "git status";
       gst = "git stash";
       gco = "git checkout";
-      gcb = "git checkout -b";
+      gct = "git checkout -t origin/";
       gfa = "git fetch --all";
     };
 
