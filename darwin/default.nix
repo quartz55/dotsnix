@@ -5,22 +5,25 @@
     # ./bootstrap.nix
     ./macos.nix
   ]
-  ++ (if yabai then [ ./yabai.nix ] else [ ])
   ++ lib.filter lib.pathExists [ ./private.nix ];
 
   nixpkgs.overlays = [
-    (self: super: {
-      # lazygit = super.callPackage ./pkgs/lazygit.nix { };
-      # zig-master = super.callPackage ./pkgs/zig-master.nix { };
-      # ssm = super.callPackage ./pkgs/ssm.nix { };
-      yabai = super.yabai.overrideAttrs (o: rec {
-        version = "3.3.6";
-        src = builtins.fetchTarball {
-          url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
-          sha256 = "0a4yb1wisxhn7k8f9l4bp8swkb17qdkc4crh42zvz4lpaxg0sgxi";
-        };
-      });
-    })
+    (
+      self: super: {
+        # lazygit = super.callPackage ./pkgs/lazygit.nix { };
+        # zig-master = super.callPackage ./pkgs/zig-master.nix { };
+        # ssm = super.callPackage ./pkgs/ssm.nix { };
+        yabai = super.yabai.overrideAttrs (
+          o: rec {
+            version = "3.3.6";
+            src = builtins.fetchTarball {
+              url = "https://github.com/koekeishiya/yabai/releases/download/v${version}/yabai-v${version}.tar.gz";
+              sha256 = "0a4yb1wisxhn7k8f9l4bp8swkb17qdkc4crh42zvz4lpaxg0sgxi";
+            };
+          }
+        );
+      }
+    )
   ];
 
   environment.systemPackages = with pkgs; [
@@ -31,10 +34,10 @@
     git
     vim
     ssm
-    yabai
-    skhd
     comma
   ];
+
+  users.nix.configureBuildUsers = true;
 
   users.users.jcosta = {
     home = "/Users/jcosta";
@@ -63,7 +66,7 @@
   programs.fish = {
     enable = true;
     useBabelfish = true;
-    babelfishPackage = pkgs.master.babelfish;
+    babelfishPackage = pkgs.babelfish;
     # Needed to address bug where $PATH is not properly set for fish:
     # https://github.com/LnL7/nix-darwin/issues/122
     interactiveShellInit = ''
@@ -100,4 +103,3 @@
   nix.maxJobs = 12;
   nix.buildCores = 0;
 }
-

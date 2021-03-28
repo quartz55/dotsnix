@@ -17,8 +17,7 @@
     # terminal/shell goodies
     ranger
     tig
-    lazygit
-    thefuck
+    gitui
     ripgrep # grep replacement (in rust)
     exa # ls replacement (in rust)
     fd # find replacement (in rust)
@@ -26,7 +25,7 @@
     fzy
     skim
 
-	# compilers/vms/runtimes
+    # compilers/vms/runtimes
     python2Full
     python39
     nodejs_latest
@@ -60,8 +59,7 @@
     enableZshIntegration = true;
     enableFishIntegration = true;
 
-    settings = {
-    };
+    settings = {};
   };
 
   programs.bat.enable = true;
@@ -70,7 +68,7 @@
     enable = true;
     vimAlias = true;
     extraConfig = ''
-    colorscheme gruvbox
+      colorscheme gruvbox
     '';
     plugins = with pkgs.vimPlugins; [
       vim-nix

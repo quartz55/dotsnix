@@ -15,8 +15,8 @@ stdenv.mkDerivation rec {
 
   installPhase =
     ''
-    unzip ${src}
-    mkdir -p $out/bin
-    mv sessionmanager-bundle/bin/session-manager-plugin $out/bin/session-manager-plugin
+      unzip ${src}
+      mkdir -p $out/bin
+      mv sessionmanager-bundle/bin/session-manager-plugin $out/bin/session-manager-plugin
     '';
 }

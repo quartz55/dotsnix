@@ -6,8 +6,7 @@ let
   inherit (super.stdenv) isDarwin;
 in
 optionalAttrs isDarwin {
-  folderify = callPackage ./folderify.nix { };
-  lazygit = callPackage ./lazygit.nix { };
-  zig-master = callPackage ./zig-master.nix { };
-  ssm = callPackage ./ssm.nix { };
+  folderify = callPackage ./folderify.nix {};
+  zig-master = callPackage ./zig-master.nix {};
+  ssm = callPackage ./ssm.nix {};
 }

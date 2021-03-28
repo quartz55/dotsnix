@@ -1,6 +1,7 @@
-{ lib, python3,
-  buildPythonPackage ? python3.pkgs.buildPythonPackage,
-  fetchPypi ? python3.pkgs.fetchPypi,
+{ lib
+, python3
+, buildPythonPackage ? python3.pkgs.buildPythonPackage
+, fetchPypi ? python3.pkgs.fetchPypi
 }:
 
 buildPythonPackage rec {
@@ -13,11 +14,11 @@ buildPythonPackage rec {
   };
 
   meta = with lib; {
-    description     = "Generate pretty, beveled macOS folder icons.";
+    description = "Generate pretty, beveled macOS folder icons.";
     longDescription = "";
-    homepage        = https://github.com/lgarron/folderify;
-    license         = licenses.mit;
-    platforms       = platforms.darwin;
-    maintainers     = with maintainers; [ quartz55 ];
+    homepage = https://github.com/lgarron/folderify;
+    license = licenses.mit;
+    platforms = platforms.darwin;
+    maintainers = with maintainers; [ quartz55 ];
   };
 }
