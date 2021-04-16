@@ -4,14 +4,12 @@
   inputs = {
     # nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-20.09-darwin";
-    nixos-stable.url = "github:nixos/nixpkgs/nixos-20.09";
+    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-20.03-darwin";
+    nixos-stable.url = "github:nixos/nixpkgs/nixos-20.03";
     nur.url = "github:nix-community/NUR";
 
     # env
-    # darwin.url = "github:lnl7/nix-darwin";
-    # TODO temp fix (https://github.com/LnL7/nix-darwin/pull/308)
-    darwin.url = "github:hardselius/nix-darwin";
+    darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -20,6 +18,7 @@
     comma = { url = "github:Shopify/comma"; flake = false; };
     utils.url = "github:numtide/flake-utils";
     malob.url = "github:malob/nixpkgs";
+    ocaml-overlays = { url = "github:anmonteiro/nix-overlays"; flake = false; };
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
     # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
     # rnix-lsp.inputs.utils.follows = "utils";
@@ -31,7 +30,7 @@
       nixpkgsConfig = with inputs; {
         config.allowUnfree = true;
         config.allowUnsupportedSystem = true;
-        overlays = self.overlays ++ [
+        overlays = self.overlays ++ [ (import ocaml-overlays) ] ++ [
           (
             final: prev:
               let
