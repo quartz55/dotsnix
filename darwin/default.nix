@@ -33,7 +33,6 @@
     htop
     git
     vim
-    ssm
     comma
   ];
 

@@ -24,6 +24,7 @@
     jq
     fzy
     skim
+    # helix
 
     # compilers/vms/runtimes
     python2Full
@@ -35,6 +36,7 @@
     ffmpeg
     sqlite
     bitwarden-cli
+    ssm
 
     # os goodies
     folderify
@@ -51,7 +53,7 @@
   programs.zsh.enable = true;
 
   programs.direnv.enable = true;
-  programs.direnv.enableNixDirenvIntegration = true;
+  programs.direnv.nix-direnv.enable = true;
 
   programs.starship = {
     enable = true;
