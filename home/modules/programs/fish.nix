@@ -26,6 +26,8 @@
     interactiveShellInit = ''
       bind \cr re_search
       set -gx fish_greeting
+      # TODO do this programatically?
+      zoxide init fish | source
     '';
 
     functions = {
@@ -40,15 +42,6 @@
     };
 
     plugins = [
-      {
-        name = "z";
-        src = pkgs.fetchFromGitHub {
-          owner = "jethrokuan";
-          repo = "z";
-          rev = "78861a85fc4da704cd7d669c1133355c89a4c667";
-          sha256 = "1ffjihdjbj3359hjhg2qw2gfx5h7rljlz811ma0a318nkdcg1asx";
-        };
-      }
       {
         name = "bax";
         src = pkgs.fetchFromGitHub {

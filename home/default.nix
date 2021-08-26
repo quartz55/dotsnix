@@ -16,11 +16,18 @@
 
     # terminal/shell goodies
     ranger
+    nnn
     tig
     gitui
-    ripgrep # grep replacement (in rust)
-    exa # ls replacement (in rust)
-    fd # find replacement (in rust)
+    ### rust replacements
+    ripgrep # grep
+    exa # ls
+    fd # find
+    du-dust # du
+    procs # ps
+    tokei # wc (not quite)
+    bottom # htop
+    zoxide # z (cd jump)
     jq
     fzy
     skim

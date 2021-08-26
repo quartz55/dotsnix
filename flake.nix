@@ -15,9 +15,9 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # others
-    comma = { url = "github:Shopify/comma"; flake = false; };
+    comma = { url = "github:fzakaria/comma/check-local-index"; flake = false; };
     utils.url = "github:numtide/flake-utils";
-    malob.url = "github:malob/nixpkgs";
+    # malob.url = "github:malob/nixpkgs";
     ocaml-overlays = { url = "github:anmonteiro/nix-overlays"; flake = false; };
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
     # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
@@ -49,7 +49,7 @@
       };
 
       mkNixDarwinModules = { user }: [
-        inputs.malob.darwinModules.security.pam
+        # inputs.malob.darwinModules.security.pam
         ./darwin
         home-manager.darwinModules.home-manager
         rec {
@@ -58,7 +58,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.${user} = homeManagerConfig;
-          security.pam.enableSudoTouchIdAuth = true;
+          # security.pam.enableSudoTouchIdAuth = true;
         }
       ];
     in
