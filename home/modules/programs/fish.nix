@@ -20,9 +20,6 @@
       gfa = "git fetch --all";
     };
 
-    promptInit = ''
-    '';
-
     interactiveShellInit = ''
       bind \cr re_search
       set -gx fish_greeting

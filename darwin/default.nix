@@ -56,8 +56,6 @@
     ls = "exa";
   };
 
-  programs.nix-index.enable = true;
-
   # services.lorri.enable = true;
 
   programs.bash.enable = true;
@@ -90,13 +88,6 @@
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  # Enable experimental version of nix with flakes support
-  nix.package = pkgs.nixFlakes;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
-    keep-outputs = true
-    keep-derivations = true
-  '';
   # You should generally set this to the total number of logical cores in your system.
   # $ sysctl -n hw.ncpu
   nix.maxJobs = 12;

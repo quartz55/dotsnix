@@ -52,19 +52,34 @@
         # inputs.malob.darwinModules.security.pam
         ./darwin
         home-manager.darwinModules.home-manager
-        rec {
-          nixpkgs = nixpkgsConfig;
-          users.users.${user}.home = "/Users/${user}";
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.${user} = homeManagerConfig;
-          # security.pam.enableSudoTouchIdAuth = true;
-        }
+        (
+          { pkgs, ... }: {
+            nixpkgs = nixpkgsConfig;
+            users.users.${user}.home = "/Users/${user}";
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${user} = homeManagerConfig;
+            # security.pam.enableSudoTouchIdAuth = true;
+            # Enable experimental version of nix with flakes support
+            nix.package = pkgs.nixFlakes;
+            nix.extraOptions = ''
+              experimental-features = nix-command flakes
+              keep-outputs = true
+              keep-derivations = true
+            '';
+
+            nix.nixPath = [
+              "nixpkgs=${inputs.nixpkgs}"
+            ];
+            nix.registry.nixpkgs.flake = inputs.nixpkgs;
+          }
+        )
       ];
     in
       {
         darwinConfigurations = {
           personalMacPro = darwin.lib.darwinSystem {
+            system = "x86_64-darwin";
             inputs = { inherit darwin nixpkgs; };
             modules = mkNixDarwinModules { user = "jcosta"; } ++ [
               {
@@ -83,6 +98,7 @@
           };
 
           workMacPro = darwin.lib.darwinSystem {
+            system = "x86_64-darwin";
             inputs = { inherit darwin nixpkgs; };
             modules = mkNixDarwinModules { user = "jcosta"; } ++ [
               {
@@ -102,6 +118,7 @@
 
 
           githubCI = darwin.lib.darwinSystem {
+            system = "x86_64-darwin";
             modules = mkNixDarwinModules { user = "github-runner"; };
           };
         };

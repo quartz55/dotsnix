@@ -59,16 +59,19 @@
   programs.bash.enable = true;
   programs.zsh.enable = true;
 
+  programs.nix-index.enable = true;
+
   programs.direnv.enable = true;
-  programs.direnv.nix-direnv.enable = true;
+  programs.direnv.nix-direnv = {
+    enable = true;
+    enableFlakes = true;
+  };
 
   programs.starship = {
     enable = true;
     enableBashIntegration = true;
     enableZshIntegration = true;
     enableFishIntegration = true;
-
-    settings = {};
   };
 
   programs.bat.enable = true;
