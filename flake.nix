@@ -4,17 +4,23 @@
   inputs = {
     # nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-20.03-darwin";
-    nixos-stable.url = "github:nixos/nixpkgs/nixos-20.03";
+    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-21.11-darwin";
+    nixos-stable.url = "github:nixos/nixpkgs/nixos-21.11";
     nur.url = "github:nix-community/NUR";
 
     # env
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # others
+    flake-registry = { url = "github:NixOS/flake-registry"; flake = false; };
+    deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
     comma = { url = "github:fzakaria/comma/check-local-index"; flake = false; };
     utils.url = "github:numtide/flake-utils";
     # malob.url = "github:malob/nixpkgs";
@@ -24,124 +30,5 @@
     # rnix-lsp.inputs.utils.follows = "utils";
   };
 
-
-  outputs = { self, nixpkgs, nur, darwin, home-manager, utils, ... }@inputs:
-    let
-      nixpkgsConfig = with inputs; {
-        config.allowUnfree = true;
-        config.allowUnsupportedSystem = true;
-        overlays = self.overlays ++ [ (import ocaml-overlays) ] ++ [
-          (
-            final: prev:
-              let
-                system = prev.stdenv.system;
-                nixpkgs-stable = if prev.stdenv.isDarwin then nixpkgs-stable-darwin else nixos-stable;
-              in
-                { stable = nixpkgs-stable.legacyPackages.${system}; }
-          )
-        ];
-      };
-
-      homeManagerConfig = with self.homeManagerModules; {
-        imports = [
-          ./home
-        ];
-      };
-
-      mkNixDarwinModules = { user }: [
-        # inputs.malob.darwinModules.security.pam
-        ./darwin
-        home-manager.darwinModules.home-manager
-        (
-          { pkgs, ... }: {
-            nixpkgs = nixpkgsConfig;
-            users.users.${user}.home = "/Users/${user}";
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${user} = homeManagerConfig;
-            # security.pam.enableSudoTouchIdAuth = true;
-            # Enable experimental version of nix with flakes support
-            nix.package = pkgs.nixFlakes;
-            nix.extraOptions = ''
-              experimental-features = nix-command flakes
-              keep-outputs = true
-              keep-derivations = true
-            '';
-
-            nix.nixPath = [
-              "nixpkgs=${inputs.nixpkgs}"
-            ];
-            nix.registry.nixpkgs.flake = inputs.nixpkgs;
-          }
-        )
-      ];
-    in
-      {
-        darwinConfigurations = {
-          personalMacPro = darwin.lib.darwinSystem {
-            system = "x86_64-darwin";
-            inputs = { inherit darwin nixpkgs; };
-            modules = mkNixDarwinModules { user = "jcosta"; } ++ [
-              {
-                networking.computerName = "quartz 💻";
-                networking.hostName = "m13pro";
-                networking.dns = [
-                  "8.8.8.8"
-                  "1.1.1.1"
-                ];
-                networking.knownNetworkServices = [
-                  "Wi-Fi"
-                  "USB 10/100/1000 LAN"
-                ];
-              }
-            ];
-          };
-
-          workMacPro = darwin.lib.darwinSystem {
-            system = "x86_64-darwin";
-            inputs = { inherit darwin nixpkgs; };
-            modules = mkNixDarwinModules { user = "jcosta"; } ++ [
-              {
-                networking.computerName = "quartz 💻";
-                networking.hostName = "bp-m16pro";
-                networking.dns = [
-                  "8.8.8.8"
-                  "1.1.1.1"
-                ];
-                networking.knownNetworkServices = [
-                  "Wi-Fi"
-                  "USB 10/100/1000 LAN"
-                ];
-              }
-            ];
-          };
-
-
-          githubCI = darwin.lib.darwinSystem {
-            system = "x86_64-darwin";
-            modules = mkNixDarwinModules { user = "github-runner"; };
-          };
-        };
-
-        darwinModules = {};
-
-        homeManagerModules = {};
-
-        overlays = with inputs; [
-          (
-            final: prev: {
-              comma = import comma { inherit (prev) pkgs; };
-              # rnix-lsp = import rnix-lsp { inherit (prev) pkgs; };
-            }
-          )
-          (import ./overlays)
-        ];
-
-        defaultPackage."x86_64-darwin" = self.darwinConfigurations.personalMacPro.system;
-
-      } // utils.lib.eachDefaultSystem (
-        system: {
-          legacyPackages = import nixpkgs { inherit system; inherit (nixpkgsConfig) config overlays; };
-        }
-      );
+  outputs = { ... } @ args: import ./outputs.nix args;
 }

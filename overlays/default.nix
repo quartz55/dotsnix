@@ -6,7 +6,8 @@ let
   inherit (super.stdenv) isDarwin;
 in
 {
-  helix = callPackage ./helix.nix {};
+  helix = callPackage ./helix.nix { };
+  babeltrace2 = callPackage ./babeltrace2.nix { };
   awscli2 = (super.buildEnv {
     name = "wrapped-awscli2-${super.awscli2.version}";
     paths = [ super.awscli2 ];
@@ -17,7 +18,7 @@ in
     '';
   });
 } // optionalAttrs isDarwin {
-  folderify = callPackage ./folderify.nix {};
-  zig-master = callPackage ./zig-master.nix {};
-  ssm = callPackage ./ssm.nix {};
+  folderify = callPackage ./folderify.nix { };
+  zig-master = callPackage ./zig-master.nix { };
+  ssm = callPackage ./ssm.nix { };
 }

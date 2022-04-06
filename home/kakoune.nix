@@ -75,12 +75,12 @@
 
     plugins = with pkgs.kakounePlugins; [
       # TODO: wth happened? (undefined var 'lib')
-      # kak-prelude
-      # case-kak
-      # kak-auto-pairs
-      # kak-buffers
-      # kak-powerline
-      # kak-fzf
+      kak-prelude
+      case-kak
+      kak-auto-pairs
+      kak-buffers
+      kak-powerline
+      kak-fzf
     ];
   };
 }

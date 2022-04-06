@@ -2,17 +2,14 @@
 
 {
   imports = [
-    # ./bootstrap.nix
     ./macos.nix
+    ./remote-builder
   ]
   ++ lib.filter lib.pathExists [ ./private.nix ];
 
   nixpkgs.overlays = [
     (
       self: super: {
-        # lazygit = super.callPackage ./pkgs/lazygit.nix { };
-        # zig-master = super.callPackage ./pkgs/zig-master.nix { };
-        # ssm = super.callPackage ./pkgs/ssm.nix { };
         yabai = super.yabai.overrideAttrs (
           o: rec {
             version = "3.3.6";
@@ -34,32 +31,22 @@
     git
     vim
     comma
+    lima
+    colima
   ];
 
   users.nix.configureBuildUsers = true;
 
-  users.users.jcosta = {
-    home = "/Users/jcosta";
-    description = "João Costa";
-    shell = pkgs.fish;
-    packages = with pkgs; [
-      home-manager
-    ];
-  };
-
   environment.variables = {
     PAGER = "less -R";
-    EDITOR = "kak";
   };
 
   environment.shellAliases = {
     ls = "exa";
   };
 
-  # services.lorri.enable = true;
-
   programs.bash.enable = true;
-  programs.zsh.enable = true;
+  # programs.zsh.enable = true;
   programs.fish = {
     enable = true;
     useBabelfish = true;

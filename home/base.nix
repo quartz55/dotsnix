@@ -1,18 +1,19 @@
 { config, pkgs, ... }:
-
 {
-  programs.home-manager.enable = true;
-
   imports = [
-    ./modules/programs/fish.nix
-    ./modules/programs/kakoune.nix
+    ./fish.nix
+    ./kakoune.nix
+    ./starship.nix
   ];
 
+  programs.home-manager.enable = true;
+  systemd.user.startServices = true;
+
   home.packages = with pkgs; [
+    git
+
     # nix
     cachix
-    nixpkgs-fmt
-    rnix-lsp
 
     # terminal/shell goodies
     ranger
@@ -31,48 +32,18 @@
     jq
     fzy
     skim
-    # helix
-
-    # compilers/vms/runtimes
-    python2Full
-    python39
-    nodejs_latest
-    zig-master
-
-    # others
-    ffmpeg
-    sqlite
-    bitwarden-cli
-    ssm
-
-    # os goodies
-    folderify
   ];
 
   home.sessionVariables = {
     EDITOR = "kak";
-    # PAGER = "col -b -x | kak";
-    # MANPAGER = "col -b -x | kak -e 'set buffer filetype man'";
   };
 
-
   programs.bash.enable = true;
-  programs.zsh.enable = true;
 
   programs.nix-index.enable = true;
 
   programs.direnv.enable = true;
-  programs.direnv.nix-direnv = {
-    enable = true;
-    enableFlakes = true;
-  };
-
-  programs.starship = {
-    enable = true;
-    enableBashIntegration = true;
-    enableZshIntegration = true;
-    enableFishIntegration = true;
-  };
+  programs.direnv.nix-direnv.enable = true;
 
   programs.bat.enable = true;
 
