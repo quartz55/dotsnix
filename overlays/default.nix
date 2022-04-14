@@ -8,6 +8,7 @@ in
 {
   helix = callPackage ./helix.nix { };
   babeltrace2 = callPackage ./babeltrace2.nix { };
+  mirage-trace-viewer-js = callPackage ./mirage-trace-viewer-js.nix { };
   awscli2 = (super.buildEnv {
     name = "wrapped-awscli2-${super.awscli2.version}";
     paths = [ super.awscli2 ];
