@@ -4,6 +4,7 @@
     ./fish.nix
     ./kakoune.nix
     ./starship.nix
+    ./pijul.nix
   ];
 
   programs.home-manager.enable = true;

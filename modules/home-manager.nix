@@ -1,23 +1,10 @@
-{ inputs, lib, config, pkgs, ... }: {
-  imports = [
-    # (mkAliasOptionModule [ "hm" ] [ "home-manager" "users" my.username ])
-  ];
-
+{ inputs, homeManagerModules, lib, config, pkgs, ... }:
+{
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     verbose = true;
     extraSpecialArgs = { inherit inputs; };
+    sharedModules = lib.attrValues homeManagerModules;
   };
-
-  # hm = {
-  #   home.stateVersion = config.system.stateVersion;
-  #   home.enableNixpkgsReleaseCheck = false;
-
-  #   systemd.user.startServices = true;
-
-  #   manual.html.enable = true;    
-  # };
-
-  # nix.gcRoots = [ inputs.home-manager ];
 }

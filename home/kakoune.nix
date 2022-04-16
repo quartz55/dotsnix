@@ -74,7 +74,6 @@
     '';
 
     plugins = with pkgs.kakounePlugins; [
-      # TODO: wth happened? (undefined var 'lib')
       kak-prelude
       case-kak
       kak-auto-pairs

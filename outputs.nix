@@ -14,13 +14,13 @@ let
     ];
   };
 in
-{
+rec {
   lib = nixpkgs.lib.extend (import ./lib);
 
   darwinConfigurations = {
     workMacPro = darwin.lib.darwinSystem {
       system = "x86_64-darwin";
-      specialArgs = { inherit inputs; };
+      specialArgs = { inherit inputs darwinModules homeManagerModules; };
       modules = [
         # inputs.malob.darwinModules.security.pam
         home-manager.darwinModules.home-manager
@@ -59,9 +59,9 @@ in
     };
   };
 
-  # nixosModules = modulesIn ./modules/nixos;
-  # darwinModules = modulesIn ./modules/darwin;
-  # homeManagerModules = modulesIn ./modules/home;
+  nixosModules = lib.modulesIn ./modules/nixos;
+  darwinModules = lib.modulesIn ./modules/darwin;
+  homeManagerModules = lib.modulesIn ./modules/home;
 
   overlays = with inputs; [
     (

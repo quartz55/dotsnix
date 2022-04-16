@@ -25,7 +25,6 @@ with lib;
     manual.html.enable = true;
   };
 
-  programs.fish.enable = true;
   users.users.root.shell = pkgs.fish;
 
   services.jmusicbot.enable = true;
