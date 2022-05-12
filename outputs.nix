@@ -2,14 +2,17 @@
 let
   nixpkgsConfig = with inputs; {
     config.allowUnsupportedSystem = true;
-    overlays = self.overlays ++ [ (import ocaml-overlays) ] ++ [
+    overlays = self.overlays ++ [
+      nur.overlay
+    ] ++ [
       (
         final: prev:
           let
             system = prev.stdenv.system;
             nixpkgs-stable = if prev.stdenv.isDarwin then nixpkgs-stable-darwin else nixos-stable;
           in
-          { stable = nixpkgs-stable.legacyPackages.${system}; }
+          ocaml-overlays.overlays.${system}.default final prev //
+            { stable = nixpkgs-stable.legacyPackages.${system}; }
       )
     ];
   };
@@ -82,33 +85,6 @@ rec {
       ./machines/vpsfreecz.nix
     ];
   };
-
-  colmena = {
-    meta = {
-      nixpkgs = import nixpkgs {
-        system = "x86_64-linux";
-        inherit (nixpkgsConfig) config overlays;
-      };
-    };
-
-    vpsfreecz = { name, nodes, pkgs, ... }: {
-      deployment = {
-        targetHost = "37.205.14.73";
-        targetPort = 22;
-        targetUser = "root";
-      };
-      imports = [ ./machines/vpsfreecz.nix ];
-    };
-  };
-
-  deploy = {
-    nodes.vpsfreecz.profiles.system = {
-      user = "root";
-      path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.vpsfreecz;
-    };
-  };
-
-  checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
 } // utils.lib.eachDefaultSystem (
   system: {
     legacyPackages = import nixpkgs { inherit system; inherit (nixpkgsConfig) config overlays; };

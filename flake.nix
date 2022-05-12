@@ -23,8 +23,10 @@
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
     comma = { url = "github:fzakaria/comma/check-local-index"; flake = false; };
     utils.url = "github:numtide/flake-utils";
+    utils.inputs.nixpkgs.follows = "nixpkgs";
     # malob.url = "github:malob/nixpkgs";
-    ocaml-overlays = { url = "github:anmonteiro/nix-overlays"; flake = false; };
+    ocaml-overlays.url = "github:anmonteiro/nix-overlays";
+    ocaml-overlays.inputs.nixpkgs.follows = "nixpkgs";
     # rnix-lsp.url = "github:nix-community/rnix-lsp";
     # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
     # rnix-lsp.inputs.utils.follows = "utils";
