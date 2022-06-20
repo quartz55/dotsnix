@@ -13,7 +13,7 @@ in
     package = mkOption {
       type = types.package;
       default = pkgs.pijul;
-      defaultText = literalExpression "pkgs.starship";
+      defaultText = literalExpression "pkgs.pijul";
       description = "The package to use for the pijul binary.";
     };
 

@@ -16,11 +16,13 @@ with lib; {
     nodejs_latest
 
     # others
+    docker-client
+    docker-compose
     ffmpeg
     sqlite
     bitwarden-cli
 
-    zig-master
+    # zig-master
     ssm
     folderify
   ];

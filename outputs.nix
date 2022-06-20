@@ -11,8 +11,8 @@ let
             system = prev.stdenv.system;
             nixpkgs-stable = if prev.stdenv.isDarwin then nixpkgs-stable-darwin else nixos-stable;
           in
-          ocaml-overlays.overlays.${system}.default final prev //
-            { stable = nixpkgs-stable.legacyPackages.${system}; }
+          # ocaml-overlays.overlays.${system}.default final prev //
+          { stable = nixpkgs-stable.legacyPackages.${system}; }
       )
     ];
   };
@@ -22,7 +22,7 @@ rec {
 
   darwinConfigurations = {
     workMacPro = darwin.lib.darwinSystem {
-      system = "x86_64-darwin";
+      system = "aarch64-darwin";
       specialArgs = { inherit inputs darwinModules homeManagerModules; };
       modules = [
         # inputs.malob.darwinModules.security.pam
@@ -47,8 +47,8 @@ rec {
           };
           # security.pam.enableSudoTouchIdAuth = true;
 
-          networking.computerName = "quartz 💻";
-          networking.hostName = "bp-m16pro";
+          networking.computerName = "JC-m1max";
+          networking.hostName = "JC-m1max";
           networking.dns = [
             "8.8.8.8"
             "1.1.1.1"

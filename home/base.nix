@@ -22,11 +22,11 @@
     tig
     gitui
     ### rust replacements
-    ripgrep # grep
+    ripgrep # grep  
     exa # ls
     fd # find
     du-dust # du
-    procs # ps
+    # procs # FIXME: temporarily broken ps
     tokei # wc (not quite)
     bottom # htop
     zoxide # z (cd jump)
