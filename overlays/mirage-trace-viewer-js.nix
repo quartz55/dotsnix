@@ -5,7 +5,7 @@
 
 with ocamlPackages;
 let
-  mirage-trace-viewer = buildDunePackage rec {
+  mirage-trace-viewer = buildDunePackage {
     pname = "mirage-trace-viewer";
     version = "master";
 

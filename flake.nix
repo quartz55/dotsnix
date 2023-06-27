@@ -18,18 +18,16 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # others
+    devenv.url = "github:cachix/devenv/latest";
+    cachix-modules.url = "github:jonascarpay/declarative-cachix";
     flake-registry = { url = "github:NixOS/flake-registry"; flake = false; };
     deploy-rs.url = "github:serokell/deploy-rs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
-    comma = { url = "github:fzakaria/comma/check-local-index"; flake = false; };
+    comma.url = "github:nix-community/comma";
     utils.url = "github:numtide/flake-utils";
-    utils.inputs.nixpkgs.follows = "nixpkgs";
     # malob.url = "github:malob/nixpkgs";
     ocaml-overlays.url = "github:anmonteiro/nix-overlays";
     ocaml-overlays.inputs.nixpkgs.follows = "nixpkgs";
-    # rnix-lsp.url = "github:nix-community/rnix-lsp";
-    # rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
-    # rnix-lsp.inputs.utils.follows = "utils";
   };
 
   outputs = { ... } @ args: import ./outputs.nix args;

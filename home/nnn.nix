@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{ ... }:
 {
 programs.nnn = {
   enable = true;

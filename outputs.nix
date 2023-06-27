@@ -4,6 +4,9 @@ let
     config.allowUnsupportedSystem = true;
     overlays = self.overlays ++ [
       nur.overlay
+      (final: prev: {
+        devenv = devenv.packages.${prev.stdenv.system}.devenv;
+      })
     ] ++ [
       (
         final: prev:
@@ -31,14 +34,17 @@ rec {
         ./modules/home-manager.nix
         ./modules/nix.nix
         ({ pkgs, ... }: {
-          nixpkgs = nixpkgsConfig;
+          nixpkgs = nixpkgsConfig // { config.allowBroken = true; };
           users.users.jcosta = {
             home = "/Users/jcosta";
             description = "João Costa";
             shell = pkgs.fish;
           };
           home-manager.users.jcosta = {
-            imports = [ ./home/workstation.nix ];
+            imports = [
+              inputs.cachix-modules.homeManagerModules.declarative-cachix
+              ./home/workstation.nix
+            ];
 
             home.username = "jcosta";
             home.homeDirectory = "/Users/jcosta";
@@ -67,26 +73,43 @@ rec {
   homeManagerModules = lib.modulesIn ./modules/home;
 
   overlays = with inputs; [
-    (
-      final: prev: {
-        comma = import comma { inherit (prev) pkgs; };
-        # rnix-lsp = import rnix-lsp { inherit (prev) pkgs; };
-      }
-    )
+    comma.overlays.default
     (import ./overlays)
   ];
 
-  nixosConfigurations.vpsfreecz = nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-    specialArgs = { inherit inputs; };
-    modules = [
-      { nixpkgs = nixpkgsConfig; }
-      home-manager.nixosModules.home-manager
-      ./machines/vpsfreecz.nix
-    ];
-  };
+  nixosConfigurations = with lib;
+    let
+      configs = modulesIn ./machines;
+    in
+    (mapAttrs
+      (_: config: nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs nixosModules homeManagerModules; };
+        modules = [
+          inputs.sops-nix.nixosModules.sops
+          { nixpkgs = nixpkgsConfig; }
+          home-manager.nixosModules.home-manager
+          config
+        ];
+      })
+      configs);
 } // utils.lib.eachDefaultSystem (
-  system: {
-    legacyPackages = import nixpkgs { inherit system; inherit (nixpkgsConfig) config overlays; };
+  system:
+  let pkgs = import nixpkgs {
+    inherit system; inherit (nixpkgsConfig) config overlays;
+  }; in
+  {
+    legacyPackages = pkgs;
+    devShells.default = pkgs.mkShell
+      {
+        buildInputs = with pkgs; [
+          nixpkgs-fmt
+          nil
+          nixos-rebuild
+          wireguard-tools
+          sops
+          gnupg
+        ];
+      };
   }
 )

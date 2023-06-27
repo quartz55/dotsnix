@@ -16,7 +16,7 @@ buildPythonPackage rec {
   meta = with lib; {
     description = "Generate pretty, beveled macOS folder icons.";
     longDescription = "";
-    homepage = https://github.com/lgarron/folderify;
+    homepage = "https://github.com/lgarron/folderify";
     license = licenses.mit;
     platforms = platforms.darwin;
     maintainers = with maintainers; [ quartz55 ];

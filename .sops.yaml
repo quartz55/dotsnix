@@ -1,0 +1,10 @@
+keys:
+  - &quartz 77795567A84885C0A85404B999160C2477912783
+  - &server_vpsfreecz age1gfreznyjcmny688z78sw4k4lqhcvennaaj2tp3cypx44g6mg7yjqkj68j8
+creation_rules:
+  - path_regex: secrets/[^/]+\.yaml$
+    key_groups:
+      - pgp:
+          - *quartz
+        age:
+          - *server_vpsfreecz

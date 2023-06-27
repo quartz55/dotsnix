@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./fish.nix
@@ -15,6 +15,7 @@
 
     # nix
     cachix
+    devenv
 
     # terminal/shell goodies
     ranger
@@ -26,7 +27,7 @@
     exa # ls
     fd # find
     du-dust # du
-    # procs # FIXME: temporarily broken ps
+    procs # FIXME: temporarily broken ps
     tokei # wc (not quite)
     bottom # htop
     zoxide # z (cd jump)
@@ -34,6 +35,10 @@
     fzy
     skim
   ];
+
+  # caches.cachix = [
+  #   "devenv"
+  # ];
 
   home.sessionVariables = {
     EDITOR = "kak";

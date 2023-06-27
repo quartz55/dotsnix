@@ -36,15 +36,20 @@
           commandline -r $exec
         end
       '';
+      repeat = ''
+        while read -P "Press enter to restart..." -n1 -s
+          command $argv
+        end
+      '';
     };
 
     plugins = [
       {
-        name = "bax";
+        name = "replay";
         src = pkgs.fetchFromGitHub {
           owner = "jorgebucaran";
-          repo = "bax.fish";
-          rev = "f009f1dc9e013c64b572e0ffba8cd4be3024eaa4";
+          repo = "replay.fish";
+          rev = "bd8e5b89ec78313538e747f0292fcaf631e87bd2";
           sha256 = "0f70ymn9zmawf99z1c952fv6dj66bkpakx2xwv3b6706sxb9jf7a";
         };
       }
@@ -53,7 +58,7 @@
         src = pkgs.fetchFromGitHub {
           owner = "franciscolourenco";
           repo = "done";
-          rev = "3409c4a7b5363c786981761f12184112eccead70";
+          rev = "d6abb267bb3fb7e987a9352bc43dcdb67bac9f06";
           sha256 = "1fn4q2clm0n9agb9f2vx1zj3g785kfjyyfdr2w3zzmsjaa8kcxqr";
         };
       }
@@ -62,7 +67,7 @@
         src = pkgs.fetchFromGitHub {
           owner = "laughedelic";
           repo = "pisces";
-          rev = "34971b9671e217cfba0c71964f5028d44b58be8c";
+          rev = "e45e0869855d089ba1e628b6248434b2dfa709c4";
           sha256 = "05wjq7v0v5hciqa27wx2xypyywa4291pxmmvfv5yvwmxm1pc02hm";
         };
       }

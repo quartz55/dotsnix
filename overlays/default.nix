@@ -20,6 +20,5 @@ in
   });
 } // optionalAttrs isDarwin {
   folderify = callPackage ./folderify.nix { };
-  zig-master = callPackage ./zig-master.nix { };
   ssm = callPackage ./ssm.nix { };
 }
