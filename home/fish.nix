@@ -1,14 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
+  programs.carapace.enableFishIntegration = true;
   programs.fish = {
     enable = true;
 
     shellAliases = {
-      ls = "exa";
-      ll = "exa -l";
-      lt = "exa -T";
-      llt = "exa -lT";
-      llx = "exa -lahgmU@ --git";
+      ls = "eza";
+      ll = "eza -l";
+      lt = "eza -T";
+      llt = "eza -lT";
+      llx = "eza -lahgmU@ --git";
+      zed = "/Applications/Zed.app/Contents/MacOS/cli";
     };
 
     shellAbbrs = {
@@ -39,6 +41,11 @@
       repeat = ''
         while read -P "Press enter to restart..." -n1 -s
           command $argv
+        end
+      '';
+      refresh-dns = ''
+        if test (uname) = Darwin
+          sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
         end
       '';
     };

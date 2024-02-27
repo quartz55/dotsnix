@@ -1,10 +1,11 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   imports = [
     ./fish.nix
+    # ./nushell.nix
     ./kakoune.nix
     ./starship.nix
     ./pijul.nix
+    ./emacs.nix
   ];
 
   programs.home-manager.enable = true;
@@ -23,11 +24,11 @@
     tig
     gitui
     ### rust replacements
-    ripgrep # grep  
-    exa # ls
+    ripgrep # grep
+    eza # ls
     fd # find
     du-dust # du
-    procs # FIXME: temporarily broken ps
+    procs # ps
     tokei # wc (not quite)
     bottom # htop
     zoxide # z (cd jump)
@@ -36,13 +37,9 @@
     skim
   ];
 
-  # caches.cachix = [
-  #   "devenv"
-  # ];
+  # caches.cachix = [ "devenv" "nix-community" ];
 
-  home.sessionVariables = {
-    EDITOR = "kak";
-  };
+  home.sessionVariables = { EDITOR = "kak"; };
 
   programs.bash.enable = true;
 
@@ -52,6 +49,7 @@
   programs.direnv.nix-direnv.enable = true;
 
   programs.bat.enable = true;
+  programs.carapace.enable = true;
 
   programs.neovim = {
     enable = true;
@@ -59,9 +57,6 @@
     extraConfig = ''
       colorscheme gruvbox
     '';
-    plugins = with pkgs.vimPlugins; [
-      vim-nix
-      gruvbox
-    ];
+    plugins = with pkgs.vimPlugins; [ vim-nix gruvbox ];
   };
 }

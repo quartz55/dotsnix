@@ -3,6 +3,7 @@ with lib;
 {
   imports = [
     ../../modules/nixos/vpsadminos.nix
+    ../../modules/nixos/timemachine.nix
     ../../modules/home-manager.nix
     ../../modules/nix.nix
     ./dns.nix
@@ -16,6 +17,7 @@ with lib;
   sops.age.generateKey = true;
   sops.secrets.vpn = {};
 
+  nfs.timemachine.enable = true;
   machine.isVpsAdminOS = true;
 
   environment.systemPackages = with pkgs; [

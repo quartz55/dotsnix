@@ -1,9 +1,9 @@
 { inputs, lib, config, pkgs, ... }: {
   imports = [ ];
 
-  nix.package = pkgs.nixFlakes;
+  nix.package = pkgs.nixVersions.unstable;
   nix.extraOptions = ''
-    experimental-features = nix-command flakes
+    experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env
     keep-outputs = true
     keep-derivations = true
   '';

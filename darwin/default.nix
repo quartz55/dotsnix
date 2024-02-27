@@ -1,14 +1,11 @@
-{ lib, config, pkgs, ... }:
+{ lib, osConfig, config, pkgs, ... }:
 
 {
-  imports = [
-    ./macos.nix
-    ./remote-builder
-  ]
-  ++ lib.filter lib.pathExists [ ./private.nix ];
+  imports = [ ./macos.nix ./remote-builder ]
+    ++ lib.filter lib.pathExists [ ./private.nix ];
 
   environment.systemPackages = with pkgs; [
-    exa
+    eza
     curl
     wget
     htop
@@ -17,17 +14,14 @@
     comma
     lima
     colima
+
   ];
 
   nix.configureBuildUsers = true;
 
-  environment.variables = {
-    PAGER = "less -R";
-  };
+  environment.variables = { PAGER = "less -R"; };
 
-  environment.shellAliases = {
-    ls = "exa";
-  };
+  environment.shellAliases = { ls = "eza"; };
 
   programs.bash.enable = true;
   # programs.zsh.enable = true;
@@ -37,24 +31,26 @@
     babelfishPackage = pkgs.babelfish;
     # Needed to address bug where $PATH is not properly set for fish:
     # https://github.com/LnL7/nix-darwin/issues/122
-    loginShellInit = ''
-      ### Add nix binary paths to the PATH
-      # Perhaps someday will be fixed in nix or nix-darwin itself
-      if test (uname) = Darwin
-          for p in (string split : $NIX_PROFILES)
-            fish_add_path --prepend "$p/bin"
-          end
-      end
+    # FIX: https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
+    loginShellInit = let
+      dquote = str: ''"'' + str + ''"'';
+      makeBinPathList = map (path: path + "/bin");
+    in ''
+      fish_add_path --move --prepend --path ${
+        lib.concatMapStringsSep " " dquote
+        (makeBinPathList config.environment.profiles)
+      }
+      fish_add_path --move --append --path /nix/var/nix/profiles/default/bin
+      set fish_user_paths $fish_user_paths
     '';
   };
+
   # Needed to ensure Fish is set as the default shell:
   # https://github.com/LnL7/nix-darwin/issues/146
   environment.variables.SHELL = "${pkgs.fish}/bin/fish";
   environment.shells = with pkgs; [ fish zsh bash ];
 
-
   services.activate-system.enable = true;
-
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;

@@ -1,26 +1,24 @@
-{ self, nixpkgs, nur, darwin, home-manager, deploy-rs, utils, ... } @ inputs:
+{ self, nixpkgs, nur, darwin, home-manager, utils, ... }@inputs:
 let
   nixpkgsConfig = with inputs; {
     config.allowUnsupportedSystem = true;
     overlays = self.overlays ++ [
       nur.overlay
-      (final: prev: {
-        devenv = devenv.packages.${prev.stdenv.system}.devenv;
-      })
-    ] ++ [
-      (
-        final: prev:
-          let
-            system = prev.stdenv.system;
-            nixpkgs-stable = if prev.stdenv.isDarwin then nixpkgs-stable-darwin else nixos-stable;
-          in
-          # ocaml-overlays.overlays.${system}.default final prev //
-          { stable = nixpkgs-stable.legacyPackages.${system}; }
-      )
+      comma.overlays.default
+      (final: prev:
+        let
+          system = prev.stdenv.system;
+          nixpkgs-stable = if prev.stdenv.isDarwin then
+            nixpkgs-stable-darwin
+          else
+            nixos-stable;
+        in {
+          stable = nixpkgs-stable.legacyPackages.${system};
+          devenv = devenv.packages.${prev.stdenv.system}.devenv;
+        })
     ];
   };
-in
-rec {
+in rec {
   lib = nixpkgs.lib.extend (import ./lib);
 
   darwinConfigurations = {
@@ -28,11 +26,16 @@ rec {
       system = "aarch64-darwin";
       specialArgs = { inherit inputs darwinModules homeManagerModules; };
       modules = [
-        # inputs.malob.darwinModules.security.pam
         home-manager.darwinModules.home-manager
         ./darwin
         ./modules/home-manager.nix
         ./modules/nix.nix
+        {
+          nixpkgs.overlays = with inputs; [
+            darwin-emacs.overlays.emacs
+            darwin-emacs-packages.overlays.package
+          ];
+        }
         ({ pkgs, ... }: {
           nixpkgs = nixpkgsConfig // { config.allowBroken = true; };
           users.users.jcosta = {
@@ -42,7 +45,8 @@ rec {
           };
           home-manager.users.jcosta = {
             imports = [
-              inputs.cachix-modules.homeManagerModules.declarative-cachix
+              inputs.cachix.homeManagerModules.declarative-cachix
+              ./modules/home/darwin/trampoline-apps
               ./home/workstation.nix
             ];
 
@@ -51,18 +55,11 @@ rec {
             home.stateVersion = "22.05";
             programs.home-manager.enable = true;
           };
-          # security.pam.enableSudoTouchIdAuth = true;
 
           networking.computerName = "JC-m1max";
           networking.hostName = "JC-m1max";
-          networking.dns = [
-            "8.8.8.8"
-            "1.1.1.1"
-          ];
-          networking.knownNetworkServices = [
-            "Wi-Fi"
-            "USB 10/100/1000 LAN"
-          ];
+          networking.dns = [ "1.1.1.1" "8.8.8.8" ];
+          networking.knownNetworkServices = [ "Wi-Fi" "USB 10/100/1000 LAN" ];
         })
       ];
     };
@@ -72,17 +69,12 @@ rec {
   darwinModules = lib.modulesIn ./modules/darwin;
   homeManagerModules = lib.modulesIn ./modules/home;
 
-  overlays = with inputs; [
-    comma.overlays.default
-    (import ./overlays)
-  ];
+  overlays = with inputs; [ (import ./overlays) ];
 
   nixosConfigurations = with lib;
-    let
-      configs = modulesIn ./machines;
-    in
-    (mapAttrs
-      (_: config: nixpkgs.lib.nixosSystem {
+    let configs = modulesIn ./machines;
+    in (mapAttrs (_: config:
+      nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs nixosModules homeManagerModules; };
         modules = [
@@ -91,25 +83,24 @@ rec {
           home-manager.nixosModules.home-manager
           config
         ];
-      })
-      configs);
-} // utils.lib.eachDefaultSystem (
-  system:
-  let pkgs = import nixpkgs {
-    inherit system; inherit (nixpkgsConfig) config overlays;
-  }; in
-  {
+      }) configs);
+} // utils.lib.eachDefaultSystem (system:
+  let
+    pkgs = import nixpkgs {
+      inherit system;
+      inherit (nixpkgsConfig) config overlays;
+    };
+  in {
     legacyPackages = pkgs;
-    devShells.default = pkgs.mkShell
-      {
-        buildInputs = with pkgs; [
-          nixpkgs-fmt
-          nil
-          nixos-rebuild
-          wireguard-tools
-          sops
-          gnupg
-        ];
-      };
-  }
-)
+    devShells.default = pkgs.mkShell {
+      buildInputs = with pkgs; [
+        nixfmt
+        nil
+        rnix-lsp
+        nixos-rebuild
+        wireguard-tools
+        sops
+        gnupg
+      ];
+    };
+  })

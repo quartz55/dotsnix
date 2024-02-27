@@ -3,7 +3,7 @@
   security.acme.acceptTerms = true;
   security.acme.defaults.email = "john.razor97+acme@gmail.com";
 
-  # NOTE @jcosta: this is needed for `transparent` in `proxy_bind`
+  # NOTE @quartz55: this is needed for `transparent` in `proxy_bind`
   # services.nginx.appendConfig = let cfg = config.services.nginx; in ''user ${cfg.user} ${cfg.group};'';
   # systemd.services.nginx.serviceConfig.User = lib.mkForce "root";
   services.nginx = {
@@ -18,9 +18,6 @@
         kTLS = true;
         forceSSL = true;
         enableACME = true;
-        # locations."/" = {
-        #   return = ''404 "404 Not Found\n"'';
-        # };
         locations."/" = {
           proxyPass = "http://127.0.0.1:3000/dns-query";
           extraConfig = ''
@@ -77,16 +74,13 @@
     enable = true;
     settings = {
       users = [
-        { name = "quartz"; password = "\"$2y$05$Elt/BH8139q4nnZA/xDSi.f/gSwRVnPcD98Q/YShlzXkpY4clx.eu\""; }
+        # TODO @quartz55: use sops for this
+        { name = "quartz"; password = "$2y$05$PiwI832qLAGyfpKD0Sf5dulpzgeeNavB8JgwzxHLoW2FxayvLee4m"; }
       ];
       dns = {
         port = 8053;
         bind_hosts = [ "0.0.0.0" ];
         upstream_dns = [
-          "8.8.8.8"
-          "8.8.4.4"
-          "2001:4860:4860::8888"
-          "2001:4860:4860::8844"
           "1.1.1.1"
           "1.0.0.1"
           "2606:4700:4700::1111"
@@ -95,9 +89,14 @@
           "94.140.15.15"
           "2a10:50c0::ad1:ff"
           "2a10:50c0::ad2:ff"
+          "8.8.8.8"
+          "8.8.4.4"
+          "2001:4860:4860::8888"
+          "2001:4860:4860::8844"
         ];
-        bootstrap_dns = [ "8.8.8.8" "1.1.1.1" ];
-        ednsClientSubnet = [ ];
+        bootstrap_dns = [ "1.1.1.1" "8.8.8.8" ];
+        ednsClientSubnet = [];
+        blocked_services = {};
       };
       dhcp.enabled = false;
       tls = {

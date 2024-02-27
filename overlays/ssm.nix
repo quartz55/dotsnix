@@ -2,7 +2,7 @@
 
 stdenv.mkDerivation rec {
   pname = "ssm-session-manager-plugin";
-  version = "1.2.30.0";
+  version = "1.2.463.0";
 
   src = fetchurl {
     url = "https://s3.amazonaws.com/session-manager-downloads/plugin/${version}/mac/sessionmanager-bundle.zip";
