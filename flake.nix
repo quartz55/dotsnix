@@ -19,6 +19,7 @@
 
     # cachix
     cachix.url = "github:jonascarpay/declarative-cachix";
+    attic.url = "github:zhaofengli/attic";
 
     # emacs
     darwin-emacs = {
@@ -35,10 +36,6 @@
     nuenv.url = "https://flakehub.com/f/DeterminateSystems/nuenv/*.tar.gz";
     crowdsec = {
       url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    caddy = {
-      url = "github:crabdancing/nixos-caddy-with-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     musnix = {

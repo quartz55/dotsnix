@@ -14,9 +14,6 @@ let
       self.overlays.default
       nur.overlays.default
       nuenv.overlays.nuenv
-      (final: prev: {
-        caddyWithPlugins = inputs.caddy.packages.${final.system}.default.withPlugins;
-      })
       (
         final: prev:
         let
@@ -80,10 +77,6 @@ rec {
 
             networking.computerName = "JC-m1max";
             networking.hostName = "JC-m1max";
-            # networking.dns = [
-            #   "1.1.1.1"
-            #   "8.8.8.8"
-            # ];
             networking.knownNetworkServices = [
               "Wi-Fi"
               "USB 10/100/1000 LAN"

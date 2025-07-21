@@ -75,8 +75,7 @@ in
     };
     settings = {
       server = {
-        # DOMAIN = "git.example.com";
-        # You need to specify this to remove the port from URLs in the web UI.
+        DOMAIN = domain;
         ROOT_URL = "https://${domain}/";
         HTTP_PORT = 3000;
         ENABLE_GZIP = true;
@@ -133,18 +132,29 @@ in
     instances.default = {
       enable = true;
       name = "monolith";
-      # url = "https://${domain}";
-      url = "http://localhost:3000";
+      url = "https://${domain}";
       # Obtaining the path to the runner token file may differ
       # tokenFile should be in format TOKEN=<secret>, since it's EnvironmentFile for systemd
       tokenFile = config.sops.secrets.forgejo-runner-token.path;
       labels = [
         # "ubuntu-22.04:docker://ghcr.io/catth
-        "ubuntu-latest:docker://node:20-bullseye"
-        "ubuntu-22.04:docker://node:20-bullseye"
+        "ubuntu-latest:docker://node:20-bookworm"
+        "ubuntu-24.04:docker://node:20-bookworm"
+        "ubuntu-22.04:docker://node:20-bookworm"
+        "ubuntu-20.04:docker://node:20-bullseye"
         "nixos-latest:docker://nixos/nix"
         ## optionally provide native execution on the host:
         # "native:host"
+      ];
+    };
+    instances.extra = {
+      enable = true;
+      name = "extra";
+      url = "https://${domain}";
+      tokenFile = config.sops.secrets.forgejo-runner-token.path;
+      labels = [
+        "ubuntu-latest:docker://node:20-bookworm"
+        "nixos-latest:docker://nixos/nix"
       ];
     };
   };

@@ -90,8 +90,6 @@
         "guest account" = "nobody";
         "map to guest" = "bad user";
       };
-    };
-    shares = {
       media = {
         path = "/export/media";
         browseable = "yes";
