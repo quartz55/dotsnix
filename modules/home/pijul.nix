@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 let
   cfg = config.programs.pijul;
@@ -18,7 +23,8 @@ in
     };
 
     settings = mkOption {
-      type = with types;
+      type =
+        with types;
         let
           prim = either bool (either int str);
           primOrPrimAttrs = either prim (attrsOf prim);

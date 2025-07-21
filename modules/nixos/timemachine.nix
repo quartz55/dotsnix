@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 let
@@ -11,14 +16,14 @@ in
 
   options.nfs.timemachine = {
     enable = mkEnableOption ''
-    TimeMachine compatible SAMBA NFS
+      TimeMachine compatible SAMBA NFS
     '';
   };
 
   config = mkIf cfg.enable {
     users = {
-      groups.timemachine= {};
-      users.timemachine= {
+      groups.timemachine = { };
+      users.timemachine = {
         isNormalUser = true;
         description = "Residence of our TimeMachine Samba user";
         group = "timemachine";
@@ -27,7 +32,7 @@ in
         shell = pkgs.shadow;
       };
     };
-    users.users.root.extraGroups = ["timemachine"];
+    users.users.root.extraGroups = [ "timemachine" ];
 
     services.avahi = {
       publish.enable = true;
@@ -60,45 +65,45 @@ in
       openFirewall = true;
       securityType = "user";
       extraConfig = ''
-          log level = 3
-          workgroup = WORKGROUP
-          server role = standalone server
-          dns proxy = no
-          vfs objects = catia fruit streams_xattr
+        log level = 3
+        workgroup = WORKGROUP
+        server role = standalone server
+        dns proxy = no
+        vfs objects = catia fruit streams_xattr
 
-          pam password change = yes
-          map to guest = bad user
-          usershare allow guests = yes
-          create mask = 0664
-          force create mode = 0664
-          directory mask = 0775
-          force directory mode = 0775
-          follow symlinks = yes
-          load printers = no
-          printing = bsd
-          printcap name = /dev/null
-          disable spoolss = yes
-          strict locking = no
-          aio read size = 0
-          aio write size = 0
-          vfs objects = acl_xattr catia fruit streams_xattr
-          inherit permissions = yes
+        pam password change = yes
+        map to guest = bad user
+        usershare allow guests = yes
+        create mask = 0664
+        force create mode = 0664
+        directory mask = 0775
+        force directory mode = 0775
+        follow symlinks = yes
+        load printers = no
+        printing = bsd
+        printcap name = /dev/null
+        disable spoolss = yes
+        strict locking = no
+        aio read size = 0
+        aio write size = 0
+        vfs objects = acl_xattr catia fruit streams_xattr
+        inherit permissions = yes
 
-          # Security
-          server smb encrypt = required
-          # client max protocol = SMB3
-          # client min protocol = SMB2_10
-          # server max protocol = SMB3
-          server min protocol = SMB3_00
+        # Security
+        server smb encrypt = required
+        # client max protocol = SMB3
+        # client min protocol = SMB2_10
+        # server max protocol = SMB3
+        server min protocol = SMB3_00
 
-          # Time Machine
-          fruit:delete_empty_adfiles = yes
-          fruit:time machine = yes
-          fruit:veto_appledouble = no
-          fruit:wipe_intentionally_left_blank_rfork = yes
-          fruit:posix_rename = yes
-          fruit:metadata = stream
-        '';
+        # Time Machine
+        fruit:delete_empty_adfiles = yes
+        fruit:time machine = yes
+        fruit:veto_appledouble = no
+        fruit:wipe_intentionally_left_blank_rfork = yes
+        fruit:posix_rename = yes
+        fruit:metadata = stream
+      '';
 
       shares = {
         timemachine = {
@@ -114,8 +119,6 @@ in
         };
       };
     };
-    systemd.tmpfiles.rules = [
-      "d ${dirname} 0770 timemachine timemachine - -"
-    ];
+    systemd.tmpfiles.rules = [ "d ${dirname} 0770 timemachine timemachine - -" ];
   };
 }

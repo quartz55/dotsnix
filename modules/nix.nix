@@ -1,21 +1,34 @@
-{ inputs, lib, config, pkgs, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   imports = [ ];
 
-  nix.package = pkgs.nixVersions.unstable;
+  nix.package = pkgs.nixVersions.latest;
   nix.extraOptions = ''
-    experimental-features = nix-command flakes auto-allocate-uids configurable-impure-env
+    experimental-features = nix-command flakes auto-allocate-uids
     keep-outputs = true
     keep-derivations = true
   '';
 
-  nix.nixPath = [
-    "nixpkgs=${inputs.nixpkgs}"
+  nix.settings.trusted-users = [
+    "root"
+    "@wheel"
   ];
+
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
   nix.registry = {
     self.flake = inputs.self;
 
     nixpkgs = {
-      from = { id = "nixpkgs"; type = "indirect"; };
+      from = {
+        id = "nixpkgs";
+        type = "indirect";
+      };
       flake = inputs.nixpkgs;
     };
   };

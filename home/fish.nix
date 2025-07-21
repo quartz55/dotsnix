@@ -25,6 +25,9 @@
     interactiveShellInit = ''
       bind \cr re_search
       set -gx fish_greeting
+      if test -n "$GHOSTTY_RESOURCES_DIR"
+        source "$GHOSTTY_RESOURCES_DIR"/shell-integration/fish/vendor_conf.d/ghostty-shell-integration.fish
+      end
       # TODO do this programatically?
       zoxide init fish | source
     '';
@@ -33,7 +36,7 @@
       re_search = ''
         history merge
         set -l input (commandline -b)
-        set -l exec (history | sk --tiebreak index,score,begin,end -q $input)
+        set -l exec (history | sk --tiebreak score,index -q $input)
         if [ $status = 0 ]
           commandline -r $exec
         end

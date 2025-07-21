@@ -1,8 +1,13 @@
-{ lib, osConfig, config, pkgs, ... }:
+{
+  lib,
+  osConfig,
+  config,
+  pkgs,
+  ...
+}:
 
 {
-  imports = [ ./macos.nix ./remote-builder ]
-    ++ lib.filter lib.pathExists [ ./private.nix ];
+  imports = [ ./macos.nix ] ++ lib.filter lib.pathExists [ ./private.nix ];
 
   environment.systemPackages = with pkgs; [
     eza
@@ -14,14 +19,16 @@
     comma
     lima
     colima
-
   ];
 
-  nix.configureBuildUsers = true;
+  environment.variables = {
+    PAGER = "less -R";
+  };
 
-  environment.variables = { PAGER = "less -R"; };
-
-  environment.shellAliases = { ls = "eza"; };
+  environment.shellAliases = {
+    ls = "eza";
+    lg = "lazygit";
+  };
 
   programs.bash.enable = true;
   # programs.zsh.enable = true;
@@ -32,31 +39,35 @@
     # Needed to address bug where $PATH is not properly set for fish:
     # https://github.com/LnL7/nix-darwin/issues/122
     # FIX: https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
-    loginShellInit = let
-      dquote = str: ''"'' + str + ''"'';
-      makeBinPathList = map (path: path + "/bin");
-    in ''
-      fish_add_path --move --prepend --path ${
-        lib.concatMapStringsSep " " dquote
-        (makeBinPathList config.environment.profiles)
-      }
-      fish_add_path --move --append --path /nix/var/nix/profiles/default/bin
-      set fish_user_paths $fish_user_paths
-    '';
+    loginShellInit =
+      let
+        dquote = str: ''"'' + str + ''"'';
+        makeBinPathList = map (path: path + "/bin");
+      in
+      ''
+        fish_add_path --move --prepend --path ${
+          lib.concatMapStringsSep " " dquote (makeBinPathList config.environment.profiles)
+        }
+        fish_add_path --move --append --path /nix/var/nix/profiles/default/bin
+        set fish_user_paths $fish_user_paths
+      '';
   };
 
   # Needed to ensure Fish is set as the default shell:
   # https://github.com/LnL7/nix-darwin/issues/146
   environment.variables.SHELL = "${pkgs.fish}/bin/fish";
-  environment.shells = with pkgs; [ fish zsh bash ];
+  environment.shells = with pkgs; [
+    fish
+    zsh
+    bash
+  ];
 
-  services.activate-system.enable = true;
+  nix.enable = true;
+  ids.gids.nixbld = 30000;
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
-  system.stateVersion = 4;
+  system.stateVersion = 6;
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
   # You should generally set this to the total number of logical cores in your system.
   # $ sysctl -n hw.ncpu
   nix.settings.max-jobs = 10;

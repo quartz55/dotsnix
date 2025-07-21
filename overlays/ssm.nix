@@ -1,4 +1,8 @@
-{ stdenv, fetchurl, pkgs }:
+{
+  stdenv,
+  fetchurl,
+  pkgs,
+}:
 
 stdenv.mkDerivation rec {
   pname = "ssm-session-manager-plugin";
@@ -13,10 +17,9 @@ stdenv.mkDerivation rec {
 
   buildInputs = with pkgs; [ unzip ];
 
-  installPhase =
-    ''
-      unzip ${src}
-      mkdir -p $out/bin
-      mv sessionmanager-bundle/bin/session-manager-plugin $out/bin/session-manager-plugin
-    '';
+  installPhase = ''
+    unzip ${src}
+    mkdir -p $out/bin
+    mv sessionmanager-bundle/bin/session-manager-plugin $out/bin/session-manager-plugin
+  '';
 }

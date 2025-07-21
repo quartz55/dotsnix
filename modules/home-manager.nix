@@ -1,4 +1,11 @@
-{ inputs, homeManagerModules, lib, config, pkgs, ... }:
+{
+  inputs,
+  homeManagerModules,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 {
   home-manager = {
     useGlobalPkgs = true;

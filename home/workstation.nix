@@ -1,11 +1,14 @@
 { pkgs, ... }:
 {
-  imports = [ ./base.nix ];
+  imports = [
+    ./base.nix
+    # ./emacs.nix
+  ];
+
   home.packages = with pkgs; [
     # nix
-    nixpkgs-fmt
-    rnix-lsp
-    nil
+    nixfmt-rfc-style
+    nixd
 
     # terminal/shell goodies
     # helix

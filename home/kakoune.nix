@@ -78,7 +78,7 @@
               exec <space><a-i>w <a-k>\A\w+\z<ret>
               set-option buffer curword "\b\Q%val{selection}\E\b"
           } catch %{
-              set-option buffer curword ''\'''\'
+              set-option buffer curword '''
           } }
       }
       add-highlighter global/ dynregex '%opt{curword}' 0:CurWord
@@ -125,26 +125,26 @@
       kakoune-registers
       kak-powerline
       kak-fzf
-      kak-lsp
+      kakoune-lsp
       kakoune-easymotion
     ];
   };
 
   home.packages =
-  let
-    kak = "${config.programs.kakoune.package}/bin/kak";
-    kakide =  pkgs.writeShellScriptBin "kakide" ''
-      server_name=$(basename `pwd`)
-      socket_file=$(${kak} -l | grep $server_name)
+    let
+      kak = "${config.programs.kakoune.package}/bin/kak";
+      kakide = pkgs.writeShellScriptBin "kakide" ''
+        server_name=$(basename `pwd`)
+        socket_file=$(${kak} -l | grep $server_name)
 
-      if [[ $socket_file == "" ]]; then
-          # Create new kakoune daemon for current dir
-          ${pkgs.toybox}/bin/setsid ${kak} -d -s $server_name &
-      fi
+        if [[ $socket_file == "" ]]; then
+            # Create new kakoune daemon for current dir
+            ${pkgs.toybox}/bin/setsid ${kak} -d -s $server_name &
+        fi
 
-      # and run kakoune (with any arguments passed to the script)
-      ${kak} -c $server_name $@
-    '';
-  in
-  [ kakide ];
+        # and run kakoune (with any arguments passed to the script)
+        ${kak} -c $server_name $@
+      '';
+    in
+    [ kakide ];
 }

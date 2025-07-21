@@ -1,13 +1,17 @@
-{ lib
-, python3
-, buildPythonPackage ? python3.pkgs.buildPythonPackage
-, fetchPypi ? python3.pkgs.fetchPypi
+{
+  lib,
+  python3,
+  buildPythonPackage ? python3.pkgs.buildPythonPackage,
+  fetchPypi ? python3.pkgs.fetchPypi,
+  python313Packages,
 }:
 
 buildPythonPackage rec {
   pname = "folderify";
   version = "1.2.0";
 
+  pyproject = true;
+  build-system = with python313Packages; [ setuptools ];
   src = fetchPypi {
     inherit pname version;
     sha256 = "0brafpgwq5s700kzsqyg5nva9ksa21930xnyg8s1ks2l6dasc3ys";

@@ -4,8 +4,8 @@
   inputs = {
     # nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-23.11-darwin";
-    nixos-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
+    nixos-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nur.url = "github:nix-community/NUR";
 
     # env
@@ -16,7 +16,6 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    devenv.url = "github:cachix/devenv/latest";
 
     # cachix
     cachix.url = "github:jonascarpay/declarative-cachix";
@@ -24,23 +23,36 @@
     # emacs
     darwin-emacs = {
       url = "github:c4710n/nix-darwin-emacs";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin-emacs-packages = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # others
+    deploy-rs.url = "github:serokell/deploy-rs";
+    nuenv.url = "https://flakehub.com/f/DeterminateSystems/nuenv/*.tar.gz";
+    crowdsec = {
+      url = "git+https://codeberg.org/kampka/nix-flake-crowdsec.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    caddy = {
+      url = "github:crabdancing/nixos-caddy-with-plugins";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    musnix = {
+      url = "github:musnix/musnix";
+    };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-registry = {
       url = "github:NixOS/flake-registry";
       flake = false;
     };
-    comma.url = "github:nix-community/comma";
     utils.url = "github:numtide/flake-utils";
-    # malob.url = "github:malob/nixpkgs";
-    ocaml-overlays.url = "github:anmonteiro/nix-overlays";
-    ocaml-overlays.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { ... }@args: import ./outputs.nix args;

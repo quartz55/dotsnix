@@ -1,11 +1,11 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ./fish.nix
     # ./nushell.nix
     ./kakoune.nix
     ./starship.nix
     ./pijul.nix
-    ./emacs.nix
   ];
 
   programs.home-manager.enable = true;
@@ -23,6 +23,7 @@
     nnn
     tig
     gitui
+    lazygit
     ### rust replacements
     ripgrep # grep
     eza # ls
@@ -39,7 +40,9 @@
 
   # caches.cachix = [ "devenv" "nix-community" ];
 
-  home.sessionVariables = { EDITOR = "kak"; };
+  home.sessionVariables = {
+    EDITOR = "kak";
+  };
 
   programs.bash.enable = true;
 
@@ -57,6 +60,9 @@
     extraConfig = ''
       colorscheme gruvbox
     '';
-    plugins = with pkgs.vimPlugins; [ vim-nix gruvbox ];
+    plugins = with pkgs.vimPlugins; [
+      vim-nix
+      gruvbox
+    ];
   };
 }
